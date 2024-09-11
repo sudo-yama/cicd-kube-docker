@@ -1,15 +1,14 @@
 pipeline {
 
     agent any
-
 	tools {
-        maven "MAVEN3"
-        jdk "OracleJDK8"
+        maven "maven3"
     }
 
     environment {
-        registry = "kubeimran/vproappdock"
+        regustry = "weerapatx/vprofileapp"
         registryCredential = 'dockerhub'
+        ARTVERSION = "${env.BUILD_ID}"
     }
 
     stages{
@@ -73,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('Build App Image') {
+        stage('Build app Image') {
           steps {
             script {
               dockerImage = docker.build registry + ":V$BUILD_NUMBER"
@@ -81,9 +80,9 @@ pipeline {
           }
         }
 
-        stage('Upload Image'){
-          steps{
-            script {
+        stage('Upload Image') {
+          steps {
+            scripte {
               docker.withRegistry('', registryCredential) {
                 dockerImage.push("V$BUILD_NUMBER")
                 dockerImage.push('latest')
@@ -92,19 +91,17 @@ pipeline {
           }
         }
 
-        stage('Remove Unused docker image') {
+        stage('Rmove Unused docker image') {
           steps{
             sh "docker rmi $registry:V$BUILD_NUMBER"
           }
         }
 
-        stage('Kubernetes Deploy') {
+        stage('kubeernetes deploy') {
           agent {label 'KOPS'}
             steps {
               sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
             }
         }
     }
-
-
 }
