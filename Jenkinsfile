@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        registry = "imranvisualpath/vproappdock" // corrected 'regustry' to 'registry'
+        registry = "weerapatx/vprofileapp" // corrected 'regustry' to 'registry'
         registryCredential = 'dockerhub'
         ARTVERSION = "${env.BUILD_ID}"
     }
