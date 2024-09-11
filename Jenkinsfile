@@ -73,30 +73,30 @@ pipeline {
             }
         }
 
-        // stage('Build app Image') {
-        //   steps {
-        //     script {
-        //       dockerImage = docker.build registry + ":V$BUILD_NUMBER"
-        //     }
-        //   }
-        // }
+        stage('Build app Image') {
+          steps {
+            script {
+              dockerImage = docker.build registry + ":V$BUILD_NUMBER"
+            }
+          }
+        }
 
-        // stage('Upload Image') {
-        //   steps {
-        //     script { // corrected 'scripte' to 'script'
-        //       docker.withRegistry('', registryCredential) {
-        //         dockerImage.push("V$BUILD_NUMBER")
-        //         dockerImage.push('latest')
-        //       }
-        //     }
-        //   }
-        // }
+        stage('Upload Image') {
+          steps {
+            script { // corrected 'scripte' to 'script'
+              docker.withRegistry('', registryCredential) {
+                dockerImage.push("V$BUILD_NUMBER")
+                dockerImage.push('latest')
+              }
+            }
+          }
+        }
 
-        // stage('Remove Unused docker image') { // corrected spelling 'Rmove' to 'Remove'
-        //   steps {
-        //     sh "docker rmi $registry:V$BUILD_NUMBER"
-        //   }
-        // }
+        stage('Remove Unused docker image') { // corrected spelling 'Rmove' to 'Remove'
+          steps {
+            sh "docker rmi $registry:V$BUILD_NUMBER"
+          }
+        }
 
         stage('kubernetes deploy') { // corrected spelling 'kubeernetes' to 'kubernetes'
           agent { label 'KOPS' }
